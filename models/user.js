@@ -4,6 +4,17 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   name: String,
   isAdmin: Boolean,
+  password: {
+    type: String,
+    required: true ,
+    select: false
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ ,
+  },
   properties: [{
     type: Schema.Types.ObjectId,
     ref: 'Property'

@@ -1,5 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+
+// setup the environment
+dotenv.config();
+// setup port
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -18,7 +23,7 @@ app.get('/', (req, res) => {
 })
 
 // api routes
-
+app.use('/api/v1/auth', authCtrl);
 
 // start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));

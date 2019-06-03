@@ -7,6 +7,6 @@ mongoose.connect(DB_URL, { useNewUrlParser: true, useFindAndModify: false })
 
   module.exports = {
    User: require('./user'),
-   Message: require('./message'),
+  //  Message: require('./message'),
    Payment: require('./payment')
   };
