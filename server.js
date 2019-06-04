@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 // setup the environment
 dotenv.config();
@@ -14,6 +15,7 @@ const authCtrl = require('./controllers/authCtrl');
 const usersCtrl = require('./controllers/usersCtrl');
 
 // middleware
+app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
