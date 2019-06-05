@@ -6,51 +6,65 @@ const jwt = require('jsonwebtoken');
 
 router.post('/signup', (req, res) => {
   console.log(req.body);
-    // check to see if email is already in db
-    db.User.find({email: req.body.email})
-      .exec()
-      .then( user => {
-        // find if user with this email already exists
-        if (user.length >= 1) {
-          return res.status(409).json({
-            message: "email already exists"
-          })
-        } else {
-          // hash password
-          bcrypt.hash(req.body.password, 10, (err, hash) => {
-            if(err){
-              console.log("Error hashing password: ", err);
-              res.status(200).json({error: err})
-            } else {
-              // create User if hash successful
-              db.User.create({
-                email: req.body.email,
-                password: hash
-              }, {password: 0}, (err, result) => {
-                // if successful, create JWT
-                jwt.sign(
-                  {result},
-                  process.env.JWT_SECRET_KEY,
-                  (err, signedJwt) => {
-                  res.status(200).json({
-                    message: 'User Created',
-                    result,
-                    signedJwt
-                  })
-                });
-              })
-            }
-          })
-        }
-      })
-      .catch( err => {
-        console.log(err);
-        res.status(500).json({err})
-      })
+  const errors = [];
+  // validation
+  if (!req.body.name) errors.push({message: 'Please enter your name.'});
+  if (!req.body.email) errors.push({message: 'Please enter your email.'});
+  if (!req.body.password) errors.push({message: 'Please enter your password.'});
+  if (req.body.password !== req.body.password2) errors.push({message: 'Your passwords do not match.'});
+  // if errors exist, end and return those errors
+  if (errors.length > 0) return res.status(400).send(errors);
+  // check to see if email is already in db
+  db.User.find({email: req.body.email})
+    .exec()
+    .then( user => {
+      // find if user with this email already exists
+      if (user.length >= 1) {
+        return res.status(409).json({
+          message: "email already exists"
+        })
+      } else {
+        // hash password
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          if(err){
+            console.log("Error hashing password: ", err);
+            res.status(200).json({error: err})
+          } else {
+            // create User if hash successful
+            db.User.create({
+              name: req.body.name,
+              email: req.body.email,
+              password: hash
+            }, (err, newUser) => {
+              // if successful, create JWT
+              const token = jwt.sign(
+                {
+                  name: newUser.name,
+                  email: newUser.email,
+                  _id: newUser._id
+                },
+                process.env.JWT_SECRET_KEY,
+                {
+                  expiresIn: "30 days"
+                },
+              );
+                res.status(200).json({
+                  message: 'User Created',
+                  newUser,
+                  token
+                })
+            })
+          }
+        })
+      }
+    })
+    .catch( err => {
+      console.log(err);
+      res.status(500).json({err})
+    })
 });
 
 router.post('/login', (req, res) => {
-  console.log('got a request');
   // find user
   db.User.find({email: req.body.email})
     .select('+password')
@@ -69,11 +83,10 @@ router.post('/login', (req, res) => {
           // create JWT
           const token = jwt.sign(
             {
-              // add some identifying information
+              name: users[0].name,
               email: users[0].email,
               _id: users[0]._id
             },
-            // add our super secret key (which should be hidden, not plaintext like this)
             process.env.JWT_SECRET_KEY,
             {
               expiresIn: "30 days"
@@ -96,9 +109,5 @@ router.post('/login', (req, res) => {
       res.status(500).json({err})
     })
 });
-
-// router.post('/logout', (req, req) => {
-
-// });
 
 module.exports = router;
