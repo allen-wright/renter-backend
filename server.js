@@ -24,8 +24,10 @@ app.get('/', (req, res) => {
   res.send('api page');
 })
 
+
 // api routes
 app.use('/api/v1/auth', authCtrl);
+app.use('/api/v1/users', usersCtrl);
 
 // start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
