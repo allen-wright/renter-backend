@@ -3,7 +3,12 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   name: String,
-  isAdmin: Boolean,
+  role:   {
+    type: Number,
+    required: true ,
+    select: false,
+    default: 1
+  },
   password: {
     type: String,
     required: true ,

@@ -45,13 +45,11 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", verifyToken, (req, res) => {
   console.log(req.decodedToken._id);
   if (req.decodedToken._id === req.params.id) {
-    db.User.findByIdAndDelete(req.params.id, (err, deletedUser) => {
+    db.User.findByIdAndDelete(req.params.id, {password: 0}, (err, deletedUser) => {
       if (err) return res.send(err);
       return res.json(deletedUser);
     });
-  } else {
-    return res.json({error: "No user found with that ID."})
-  }
+  };
 });
 
 module.exports = router;

@@ -41,6 +41,7 @@ router.post('/signup', (req, res) => {
                 {
                   name: newUser.name,
                   email: newUser.email,
+                  role: newUser.role,
                   _id: newUser._id
                 },
                 process.env.JWT_SECRET_KEY,
@@ -50,7 +51,6 @@ router.post('/signup', (req, res) => {
               );
                 res.status(200).json({
                   message: 'User Created',
-                  newUser,
                   token
                 })
             })
@@ -85,6 +85,7 @@ router.post('/login', (req, res) => {
             {
               name: users[0].name,
               email: users[0].email,
+              role: users[0].role,
               _id: users[0]._id
             },
             process.env.JWT_SECRET_KEY,
