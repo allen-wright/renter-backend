@@ -5,8 +5,20 @@ const db = require("../models");
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verification');
 
-// INDEX users
+// SHOW user
+// gets current user's profile via the ID from their token
 router.get("/", verifyToken, (req, res) => {
+  console.log(req.decodedUser._id);
+  // don't return their password
+  db.User.findById(req.decodedUser._id, {password: 0}, (err, foundUser) => {
+    if (err) return res.status(404).json({ error: 'Could not find your profile.'});
+    return res.json(foundUser);
+  })
+});
+
+// INDEX users
+// gets all users
+router.get("/all", verifyToken, (req, res) => {
   if (req.decodedUser.role >= 2) {
     // don't return any passwords
     db.User.find({}, {password: 0}, (err, allUsers) => {
@@ -46,6 +58,15 @@ router.put("/:id", verifyToken, (req, res) => {
   } else {
     return res.status(401).json({ error: "You are not authorized to do that." });
   }
+});
+
+// DESTROY user
+// deletes user by ID
+router.delete("/", verifyToken, (req, res) => {
+  db.User.findByIdAndDelete(req.decodedUser._id, {password: 0}, (err, deletedUser) => {
+    if (err) return res.status(404).json({ error: 'Could not find your user information.'});
+    return res.json(deletedUser);
+  });
 });
 
 // DESTROY user

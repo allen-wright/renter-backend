@@ -24,7 +24,6 @@ app.get('/', (req, res) => {
   res.send('api page');
 })
 
-
 // api routes
 app.use('/api/v1/auth', authCtrl);
 app.use('/api/v1/users', usersCtrl);
