@@ -3,29 +3,37 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const jwt = require('jsonwebtoken');
-const verifyToken = require('../middleware/verifyToken');
+const verifyToken = require('../middleware/verification');
 
 // INDEX users
-router.get("/", (req, res) => {
-  // don't return any passwords
-  db.User.find({}, {password: 0}, (err, allUsers) => {
-    if (err) return res.send(err);
-    return res.json(allUsers);
-  });
+router.get("/", verifyToken, (req, res) => {
+  if (req.decodedUser.role >= 2) {
+    // don't return any passwords
+    db.User.find({}, {password: 0}, (err, allUsers) => {
+      if (err) return res.send(err);
+      return res.json(allUsers);
+    });
+ } else {
+    return res.status(401).json({ error: 'You are not authorized to do that.'});
+ }
 });
 
 // SHOW user
-router.get("/:id", (req, res) => {
-  // don't return their password
-  db.User.findById(req.params.id, {password: 0}, (err, foundUser) => {
-    if (err) return res.send(err);
-    return res.json({foundUser});
-  });
+router.get("/:id", verifyToken, (req, res) => {
+  if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
+    // don't return their password
+    db.User.findById(req.params.id, {password: 0}, (err, foundUser) => {
+      if (err) return res.send(err);
+      return res.json({foundUser});
+    })
+  } else {
+    return res.status(401).json({ error: 'You are not authorized to do that.'});
+  }
 });
 
 // UPDATE user
-router.put("/:id", (req, res) => {
-  if (req.session.loggedIn && req.session.currentUser.id === req.params.id) {
+router.put("/:id", verifyToken, (req, res) => {
+  if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     db.User.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -34,22 +42,22 @@ router.put("/:id", (req, res) => {
       (err, updatedUser) => {
         if (err) return res.send(err);
         return res.json(updatedUser);
-      }
-    );
+      })
   } else {
-    return res.status(401).json({ error: "You are not authorized to update this user." });
+    return res.status(401).json({ error: "You are not authorized to do that." });
   }
 });
 
 // DESTROY user
 router.delete("/:id", verifyToken, (req, res) => {
-  console.log(req.decodedToken._id);
-  if (req.decodedToken._id === req.params.id) {
+  if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     db.User.findByIdAndDelete(req.params.id, {password: 0}, (err, deletedUser) => {
       if (err) return res.send(err);
       return res.json(deletedUser);
     });
-  };
+  } else {
+    return res.status(401).json({ error: "You are not authorized to do that." });
+  }
 });
 
 module.exports = router;
