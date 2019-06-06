@@ -8,6 +8,10 @@ const PaymentSchema = new Schema({
   },
   amount: Number,
   method: String,
+  property: {
+    type: Schema.Types.ObjectId,
+    ref: 'Property'
+  },
   date: {
     type: Date,
     default: Date.now

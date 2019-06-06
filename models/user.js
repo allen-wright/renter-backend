@@ -20,10 +20,10 @@ const UserSchema = new Schema({
     unique: true,
     match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ ,
   },
-  properties: [{
+  property: {
     type: Schema.Types.ObjectId,
     ref: 'Property'
-  }],
+  },
   maintenanceRequests: [{
     type: Schema.Types.ObjectId,
     ref: 'MaintenanceRequest'

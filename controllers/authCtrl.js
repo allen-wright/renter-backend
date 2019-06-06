@@ -1,3 +1,4 @@
+// /api/v1/auth
 const db = require('../models');
 const express = require('express');
 const router = express.Router();
@@ -33,6 +34,7 @@ router.post('/signup', (req, res) => {
             db.User.create({
               name: req.body.name,
               email: req.body.email,
+              property: req.body.property ? req.body.property: null,
               password: hash
             }, (err, newUser) => {
               // if successful, create JWT
@@ -41,6 +43,7 @@ router.post('/signup', (req, res) => {
                   name: newUser.name,
                   email: newUser.email,
                   role: newUser.role,
+                  property: newUser.property || null,
                   _id: newUser._id
                 },
                 process.env.JWT_SECRET_KEY,
@@ -85,6 +88,7 @@ router.post('/login', (req, res) => {
               name: users[0].name,
               email: users[0].email,
               role: users[0].role,
+              property: users[0].property || null,
               _id: users[0]._id
             },
             process.env.JWT_SECRET_KEY,

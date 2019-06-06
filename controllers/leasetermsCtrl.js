@@ -1,20 +1,19 @@
-// /api/v1/users
+// /api/v1/leaseTerms
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const verifyToken = require('../middleware/verification');
 
-// SHOW user
-// gets current user's profile via the ID from their token
+// SHOW lease terms
+// gets current user's lease terms via the ID from their token
 router.get("/", verifyToken, (req, res) => {
-  // don't return their password
-  db.User.findById(req.decodedUser._id, {password: 0}, (err, foundUser) => {
+  db.LeaseTerms.find(req.decodedUser._id, (err, foundUser) => {
     if (err) return res.status(404).json({ error: 'Could not find your profile.'});
     return res.json(foundUser);
   })
 });
 
-// SHOW user
+// SHOW lease terms
 router.get("/:id", verifyToken, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     // don't return their password
@@ -27,8 +26,9 @@ router.get("/:id", verifyToken, (req, res) => {
   }
 });
 
-// INDEX users
-// gets all users
+// INDEX lease terms
+// gets all lease terms for the user's property
+// requires the user be an admin of that property
 router.get("/all", verifyToken, (req, res) => {
   if (req.decodedUser.role >= 2) {
     // don't return any passwords
@@ -41,7 +41,14 @@ router.get("/all", verifyToken, (req, res) => {
  }
 });
 
-// UPDATE user
+// CREATE lease terms
+// requires the user be an admin of the property
+router.post('/', verifyToken, (req, res) => {
+
+});
+
+// UPDATE lease terms
+// requires the user be an admin of the property
 router.put("/:id", verifyToken, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     db.User.findByIdAndUpdate(
@@ -58,16 +65,8 @@ router.put("/:id", verifyToken, (req, res) => {
   }
 });
 
-// DESTROY user
-// deletes user by ID
-router.delete("/", verifyToken, (req, res) => {
-  db.User.findByIdAndDelete(req.decodedUser._id, {password: 0}, (err, deletedUser) => {
-    if (err) return res.status(404).json({ error: 'Could not find your user information.'});
-    return res.json(deletedUser);
-  });
-});
-
-// DESTROY user
+// DESTROY lease terms
+// requires the user be an admin of the property
 router.delete("/:id", verifyToken, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     db.User.findByIdAndDelete(req.params.id, {password: 0}, (err, deletedUser) => {

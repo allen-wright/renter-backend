@@ -13,6 +13,8 @@ const app = express();
 // controllers
 const authCtrl = require('./controllers/authCtrl');
 const usersCtrl = require('./controllers/usersCtrl');
+const propertiesCtrl = require('./controllers/propertiesCtrl');
+const chatsCtrl = require('./controllers/chatsCtrl');
 
 // middleware
 app.use(cors());
@@ -27,6 +29,8 @@ app.get('/', (req, res) => {
 // api routes
 app.use('/api/v1/auth', authCtrl);
 app.use('/api/v1/users', usersCtrl);
+app.use('/api/v1/properties', propertiesCtrl);
+app.use('/api/v1/chats', chatsCtrl);
 
 // start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
