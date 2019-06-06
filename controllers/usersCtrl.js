@@ -8,7 +8,6 @@ const verifyToken = require('../middleware/verification');
 // SHOW user
 // gets current user's profile via the ID from their token
 router.get("/", verifyToken, (req, res) => {
-  console.log(req.decodedUser._id);
   // don't return their password
   db.User.findById(req.decodedUser._id, {password: 0}, (err, foundUser) => {
     if (err) return res.status(404).json({ error: 'Could not find your profile.'});

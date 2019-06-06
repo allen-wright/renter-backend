@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 router.post('/signup', (req, res) => {
-  console.log(req.body);
   const errors = [];
   // validation
   if (!req.body.name) errors.push({message: 'Please enter your name.'});
