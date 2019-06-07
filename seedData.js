@@ -68,9 +68,9 @@ let LeaseTerms = [
 let MaintenanceRequest = [
   {
     _id: '5cfade2be5930e274d7e3c61',
-    senderId: null,
+    senderId: '5cfadf3cbc3dd7055097a39e',
     property: '5cfadc4bf9ef01a9c83d954f',
-    chat: null,
+    chat: '5cfadec19bcdb34653086af5',
     request: `The washing machine is broken.`,
     status: 'In Progress',
     completionEstimate: null,
@@ -79,7 +79,7 @@ let MaintenanceRequest = [
   },
   {
     _id: '5cfade6af070dd1388efa2cb',
-    senderId: null,
+    senderId: '5cfadf45ca25e081e84cac3e',
     property: '5cfadc4bf9ef01a9c83d954f',
     chat: null,
     request: `The bathtub is draining slowly.`,
@@ -90,7 +90,7 @@ let MaintenanceRequest = [
   },
   {
     _id: '5cfade7d69e0a7c2e15e2910',
-    senderId: null,
+    senderId: '5cfadf4acea1490d46409005',
     property: '5cfadc4bf9ef01a9c83d954f',
     chat: null,
     request: `There is no hot water coming from the shower.`,
@@ -104,22 +104,58 @@ let MaintenanceRequest = [
 let Chat = [
   {
     _id: '5cfadec19bcdb34653086af5',
-    tenant: null,
+    tenant: '5cfadf3cbc3dd7055097a39e',
+    maintenanceRequest: '5cfade2be5930e274d7e3c61',
+    property: '5cfadc4bf9ef01a9c83d954f',
+    messages: [
+      {
+        senderId: '5cfadf3cbc3dd7055097a39e',
+        content: 'Hi - I just wanted to let you know that the washing machine in my unit is broken. Do you happen to know when it might be looked at?'
+      },
+      {
+        senderId: '5cfadf2e3e13f57bc1213f17',
+        content: 'Hi Clementine - I can have the maintenance look at it this Wednesday. Do we have your authorization to enter the unit if you are not available?'
+      },
+      {
+        senderId: '5cfadf3cbc3dd7055097a39e',
+        content: 'Absolutely - thank you very much!'
+      },
+    ]
+  },
+  {
+    _id: '5cfae394d0e01ec61ec92aac',
+    tenant: '5cfadf4acea1490d46409005',
     maintenanceRequest: null,
     property: '5cfadc4bf9ef01a9c83d954f',
     messages: [
       {
-        senderId: null,
-        content: null
+        senderId: '5cfadf4acea1490d46409005',
+        content: 'I wanted to register a noise complaint - the people in unit 208 make way too much noise, and are often partying until 2AM on weekdays. Can you please ask them to be more respectful of other tenants?'
       },
       {
-        senderId: null,
-        content: null
+        senderId: '5cfadf2e3e13f57bc1213f17',
+        content: `Hi Chelsey - I'm sorry you've had this experience. I've received other complaints about this tenant, and I will have a conversation with them.`
       },
       {
-        senderId: null,
-        content: null
+        senderId: '5cfadf4acea1490d46409005',
+        content: 'Okay, thank you.'
       },
+    ]
+  },
+  {
+    _id: '5cfae60d628e26e17343aef7',
+    tenant: '5cfadf5baccdffe523447391',
+    maintenanceRequest: null,
+    property: '5cfadc4bf9ef01a9c83d954f',
+    messages: [
+      {
+        senderId: '5cfadf2e3e13f57bc1213f17',
+        content: 'Mr. Weissnat, we have received several noise complaints from other tenants. Please be sure to be mindful of the noise you are making after quiet hours.'
+      },
+      {
+        senderId: '5cfadf5baccdffe523447391',
+        content: `I'm sorry - I will try to be more mindful of my noise levels.`
+      }
     ]
   }
 ]
