@@ -60,7 +60,7 @@ router.post('/', (req, res) => {
 // UPDATE property
 // requires the user be an admin of the property, or the site owner
 router.put("/:id", verifyToken, (req, res) => {
-  if (req.decodedUser.role >= 2 && req.params.id === req.decodedUser.property
+  if (req.decodedUser.role === 2 && req.params.id === req.decodedUser.property
     || req.decodedUser.role >= 3) {
     db.Property.findByIdAndUpdate(
       req.params.id,

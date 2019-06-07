@@ -10,6 +10,10 @@ const MaintenanceRequestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Property'
   },
+  chat: {
+    type: Schema.Types.ObjectId,
+    ref: 'Chat'
+  },
   request: String,
   status: String,
   completionEstimate: Date,

@@ -4,81 +4,76 @@ const router = express.Router();
 const db = require("../models");
 const verifyToken = require('../middleware/verification');
 
-// SHOW lease terms
-// gets current user's lease terms via the ID from their token
+// SHOW maintenance requests
+// gets current user's maintenance requests via the ID from their token
 router.get("/", verifyToken, (req, res) => {
-  db.LeaseTerms.find({property: req.decodedUser.property}, (err, foundLeaseTerms) => {
-    if (err) return res.status(404).json({ error: 'Could not find your lease terms.'});
-    return res.json(foundLeaseTerms);
+  db.MaintenanceRequest.find({senderId: req.decodedUser._id}, (err, foundMaintenanceRequests) => {
+    if (err) return res.status(404).json({ error: 'Could not find your maintenance requests.'});
+    return res.json(foundMaintenanceRequests);
   })
 });
 
-// SHOW lease terms
+// SHOW maintenance request
 // requires site owner or admin of the property
 router.get("/:id", verifyToken, (req, res) => {
-  db.LeaseTerms.findById(req.params.id, (err, foundLeaseTerms) => {
-    if (err) return res.status(404).json({ error: 'Could not find your lease terms.'});
+  db.MaintenanceRequest.findById(req.params.id, (err, foundMaintenanceRequests) => {
+    if (err) return res.status(404).json({ error: 'Could not find your maintenance requests.'});
     if (req.decodedUser.role >= 3 ||
-        req.decodedUser.role >= 2 && req.decodedUser.property === foundLeaseTerms.property) {
-      return res.json({foundLeaseTerms});
+        req.decodedUser.role === 2 && req.decodedUser.property === foundMaintenanceRequests.property) {
+      return res.json({foundMaintenanceRequests});
     } else {
       return res.status(401).json({ error: 'You are not authorized to do that.'});
     }
   })
 });
 
-// INDEX lease terms
-// gets all lease terms
-// requires the user be site owner
+// INDEX maintenance requests
+// gets all maintenance requests for the property
+// requires the user be an admin of the property
 router.get("/all", verifyToken, (req, res) => {
-  if (req.decodedUser.role >= 3) {
-    db.LeaseTerms.find({}, (err, allLeaseTerms) => {
-      if (err) return res.status(500).json({ error: 'Error retrieving all lease terms. Please try again.'});
-      return res.json(allLeaseTerms);
+  if (req.decodedUser.role >= 2) {
+    db.MaintenanceRequest.find({property: req.decodedUser.property}, (err, allMaintenanceRequests) => {
+      if (err) return res.status(500).json({ error: 'Error retrieving all maintenance requests. Please try again.'});
+      return res.json(allMaintenanceRequests);
     });
   } else {
     return res.status(401).json({ error: 'You are not authorized to do that.'});
   }
 });
 
-// CREATE lease terms
-// requires the user be an admin, or the site owner
+// CREATE maintenance requests
 router.post('/', verifyToken, (req, res) => {
-  if (req.decodedUser.role >= 2) {
-    db.LeaseTerms.create(req.body, (err, newLeaseTerms) => {
-      if (err) return res.status(500).json({ error: 'Error creating lease terms. Please try again.'});
-      return res.json(newLeaseTerms);
-    })
-  } else {
-    return res.status(401).json({ error: 'You are not authorized to do that.'});
-  }
+  db.MaintenanceRequest.create(req.body, (err, newMaintenanceRequest) => {
+    if (err) return res.status(500).json({ error: 'Error creating maintenance request. Please try again.'});
+    return res.json(newMaintenanceRequest);
+  })
 });
 
-// UPDATE lease terms
+// UPDATE maintenance requests
 // requires the user be an admin of the property
 router.put("/:id", verifyToken, (req, res) => {
   if (req.decodedUser.role >= 2) {
-    db.LeaseTerms.findByIdAndUpdate(
+    db.MaintenanceRequest.findByIdAndUpdate(
       req.params.id,
       req.body,
       // return the edited state of user, not the initial
       { new: true },
-      (err, updatedLeaseTerms) => {
+      (err, updatedMaintenanceRequest) => {
         if (err) return res.send(err);
-        return res.json(updatedLeaseTerms);
+        return res.json(updatedMaintenanceRequest);
       })
   } else {
     return res.status(401).json({ error: "You are not authorized to do that." });
   }
 });
 
-// DESTROY lease terms
+// DESTROY maintenance requests
 // requires the user be an admin of the property
 router.delete("/:id", verifyToken, (req, res) => {
   if (req.decodedUser.role >= 2) {
-    db.LeaseTerms.findByIdAndDelete(req.params.id, (err, deletedLeaseTerms) => {
+    db.MaintenanceRequest.findByIdAndDelete(req.params.id, (err, deletedMaintenanceRequest) => {
       if (err) return res.send(err);
-      return res.json(deletedLeaseTerms);
+      return res.json(deletedMaintenanceRequest);
     });
   } else {
     return res.status(401).json({ error: "You are not authorized to do that." });
