@@ -13,20 +13,6 @@ router.get("/", verifyToken, (req, res) => {
   })
 });
 
-// SHOW lease terms
-// requires site owner or admin of the property
-router.get("/:id", verifyToken, (req, res) => {
-  db.LeaseTerms.findById(req.params.id, (err, foundLeaseTerms) => {
-    if (err) return res.status(404).json({ error: 'Could not find your lease terms.'});
-    if (req.decodedUser.role >= 3 ||
-        req.decodedUser.role >= 2 && req.decodedUser.property === foundLeaseTerms.property) {
-      return res.json({foundLeaseTerms});
-    } else {
-      return res.status(401).json({ error: 'You are not authorized to do that.'});
-    }
-  })
-});
-
 // INDEX lease terms
 // gets all lease terms
 // requires the user be site owner
@@ -39,6 +25,20 @@ router.get("/all", verifyToken, (req, res) => {
   } else {
     return res.status(401).json({ error: 'You are not authorized to do that.'});
   }
+});
+
+// SHOW lease terms
+// requires site owner or admin of the property
+router.get("/:id", verifyToken, (req, res) => {
+  db.LeaseTerms.findById(req.params.id, (err, foundLeaseTerms) => {
+    if (err) return res.status(404).json({ error: 'Could not find your lease terms.'});
+    if (req.decodedUser.role >= 3 ||
+        req.decodedUser.role >= 2 && req.decodedUser.property === foundLeaseTerms.property) {
+      return res.json({foundLeaseTerms});
+    } else {
+      return res.status(401).json({ error: 'You are not authorized to do that.'});
+    }
+  })
 });
 
 // CREATE lease terms

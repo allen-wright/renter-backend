@@ -17,6 +17,20 @@ router.get("/", verifyToken, (req, res) => {
   }
 });
 
+// INDEX properties
+// gets all properties
+// requires the user be the site owner
+router.get("/all", verifyToken, (req, res) => {
+  if (req.decodedUser.role >= 3) {
+    db.Property.find({}, (err, allProperties) => {
+      if (err) return res.send(err);
+      return res.json(allProperties);
+    });
+  } else {
+    return res.status(401).json({ error: 'You are not authorized to do that.'});
+  }
+});
+
 // SHOW property
 // requires the user be the site owner
 router.get("/:id", verifyToken, (req, res) => {
@@ -30,20 +44,6 @@ router.get("/:id", verifyToken, (req, res) => {
   }
 });
 
-// INDEX properties
-// gets all properties
-// requires the user be the site owner
-router.get("/all", verifyToken, (req, res) => {
-  if (req.decodedUser.role >= 3) {
-    db.Property.find({}, (err, allProperties) => {
-      if (err) return res.send(err);
-      return res.json(allProperties);
-    });
- } else {
-    return res.status(401).json({ error: 'You are not authorized to do that.'});
- }
-});
-
 // CREATE property
 // requires the user be the site owner
 router.post('/', (req, res) => {
@@ -52,9 +52,9 @@ router.post('/', (req, res) => {
       if (err) return res.send(err);
       return res.json(newProperty);
     });
- } else {
+  } else {
     return res.status(401).json({ error: 'You are not authorized to do that.'});
- }
+  }
 });
 
 // UPDATE property

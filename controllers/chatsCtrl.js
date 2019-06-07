@@ -4,20 +4,6 @@ const router = express.Router();
 const db = require("../models");
 const verifyToken = require('../middleware/verification');
 
-// SHOW chat
-// gets a chat - requires a user be the admin of the property, or site owner
-router.get("/:id", verifyToken, (req, res) => {
-  db.Chat.findById(req.params.id, (err, foundChat) => {
-    if (err) return res.status(404).json({ error: 'Could not find the chat.'});
-    if (req.decodedUser.role >= 3
-      || req.decodedUser.role >= 2 && req.decodedUser.property === foundChat.property) {
-      return res.json(foundChat);
-    } else {
-      return res.status(401).json({ error: 'You are not authorized to do that.'});
-    }
-  })
-});
-
 // INDEX chats
 // if the user is a tenant, gets all of their chats
 // if the user is an admin, get all of the chats for their property
@@ -34,7 +20,6 @@ router.get("/all", verifyToken, (req, res) => {
       return res.json(foundChats);
     })
   } else if (req.decodedUser.role >= 3) {
-    console.log('trying');
     db.Chat.find({}, (err, foundChats) => {
       if (err) return res.status(404).json({ error: 'Could not find the chat.'});
       return res.json(foundChats);
@@ -42,6 +27,20 @@ router.get("/all", verifyToken, (req, res) => {
   } else {
     return res.status(401).json({ error: 'You are not authorized to do that.'});
   }
+});
+
+// SHOW chat
+// gets a chat - requires a user be the admin of the property, or site owner
+router.get("/:id", verifyToken, (req, res) => {
+  db.Chat.findById(req.params.id, (err, foundChat) => {
+    if (err) return res.status(404).json({ error: 'Could not find the chat.'});
+    if (req.decodedUser.role >= 3
+      || req.decodedUser.role >= 2 && req.decodedUser.property === foundChat.property) {
+      return res.json(foundChat);
+    } else {
+      return res.status(401).json({ error: 'You are not authorized to do that.'});
+    }
+  })
 });
 
 // CREATE chat

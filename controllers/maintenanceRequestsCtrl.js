@@ -13,20 +13,6 @@ router.get("/", verifyToken, (req, res) => {
   })
 });
 
-// SHOW maintenance request
-// requires site owner or admin of the property
-router.get("/:id", verifyToken, (req, res) => {
-  db.MaintenanceRequest.findById(req.params.id, (err, foundMaintenanceRequests) => {
-    if (err) return res.status(404).json({ error: 'Could not find your maintenance requests.'});
-    if (req.decodedUser.role >= 3 ||
-        req.decodedUser.role === 2 && req.decodedUser.property === foundMaintenanceRequests.property) {
-      return res.json({foundMaintenanceRequests});
-    } else {
-      return res.status(401).json({ error: 'You are not authorized to do that.'});
-    }
-  })
-});
-
 // INDEX maintenance requests
 // gets all maintenance requests for the property
 // requires the user be an admin of the property
@@ -39,6 +25,20 @@ router.get("/all", verifyToken, (req, res) => {
   } else {
     return res.status(401).json({ error: 'You are not authorized to do that.'});
   }
+});
+
+// SHOW maintenance request
+// requires site owner or admin of the property
+router.get("/:id", verifyToken, (req, res) => {
+  db.MaintenanceRequest.findById(req.params.id, (err, foundMaintenanceRequests) => {
+    if (err) return res.status(404).json({ error: 'Could not find your maintenance requests.'});
+    if (req.decodedUser.role >= 3 ||
+        req.decodedUser.role === 2 && req.decodedUser.property === foundMaintenanceRequests.property) {
+      return res.json({foundMaintenanceRequests});
+    } else {
+      return res.status(401).json({ error: 'You are not authorized to do that.'});
+    }
+  })
 });
 
 // CREATE maintenance requests
