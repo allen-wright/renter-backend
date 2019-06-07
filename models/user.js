@@ -6,7 +6,7 @@ const UserSchema = new Schema({
   role:   {
     type: Number,
     required: true ,
-    select: false,
+    select: true,
     default: 1
   },
   password: {

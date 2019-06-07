@@ -410,6 +410,12 @@ let users = [
       "catchPhrase": "Centralized empowering task-force",
       "bs": "target end-to-end models"
     }
+  },
+  {
+    _id: '5cfae6de1417a33b921c191f',
+    name: 'Admin Guy',
+    email: 'admin@admin.com',
+    role: 3
   }
 ]
 

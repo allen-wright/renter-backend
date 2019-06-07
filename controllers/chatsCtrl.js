@@ -34,6 +34,7 @@ router.get("/all", verifyToken, (req, res) => {
       return res.json(foundChats);
     })
   } else if (req.decodedUser.role >= 3) {
+    console.log('trying');
     db.Chat.find({}, (err, foundChats) => {
       if (err) return res.status(404).json({ error: 'Could not find the chat.'});
       return res.json(foundChats);
