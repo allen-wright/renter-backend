@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const LeaseTermsSchema = new Schema({
   sections: [{
     name: String,
+    order: Number,
     content: String
   }],
   property: {
