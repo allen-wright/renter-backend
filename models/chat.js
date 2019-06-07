@@ -27,10 +27,6 @@ const ChatSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'User'
     },
-    receiverId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    },
     date: {
       type: Date,
       default: Date.now
