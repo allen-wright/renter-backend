@@ -16,6 +16,7 @@ const usersCtrl = require('./controllers/usersCtrl');
 const propertiesCtrl = require('./controllers/propertiesCtrl');
 const chatsCtrl = require('./controllers/chatsCtrl');
 const leaseTermsCtrl = require('./controllers/leaseTermsCtrl');
+const maintenanceRequestsCtrl = require('./controllers/maintenanceRequestsCtrl');
 
 // middleware
 app.use(cors());
@@ -32,6 +33,8 @@ app.use('/api/v1/auth', authCtrl);
 app.use('/api/v1/users', usersCtrl);
 app.use('/api/v1/properties', propertiesCtrl);
 app.use('/api/v1/chats', chatsCtrl);
+app.use('/api/v1/leaseterms', leaseTermsCtrl);
+app.use('/api/v1/maintenancerequests', maintenanceRequestsCtrl);
 
 // start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));

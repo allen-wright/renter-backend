@@ -6,6 +6,10 @@ const MaintenanceRequestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
+  property: {
+    type: Schema.Types.ObjectId,
+    ref: 'Property'
+  },
   request: String,
   status: String,
   completionEstimate: Date,
