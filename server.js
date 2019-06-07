@@ -15,6 +15,7 @@ const authCtrl = require('./controllers/authCtrl');
 const usersCtrl = require('./controllers/usersCtrl');
 const propertiesCtrl = require('./controllers/propertiesCtrl');
 const chatsCtrl = require('./controllers/chatsCtrl');
+const leaseTermsCtrl = require('./controllers/leaseTermsCtrl');
 
 // middleware
 app.use(cors());
