@@ -7,9 +7,9 @@ const verifyToken = require('../middleware/verification');
 // SHOW lease terms
 // gets current user's lease terms via the ID from their token
 router.get("/", verifyToken, (req, res) => {
-  db.LeaseTerms.find(req.decodedUser._id, (err, foundUser) => {
+  db.LeaseTerms.find(req.decodedUser._id, (err, foundLeaseTerms) => {
     if (err) return res.status(404).json({ error: 'Could not find your profile.'});
-    return res.json(foundUser);
+    return res.json(foundLeaseTerms);
   })
 });
 
@@ -17,9 +17,9 @@ router.get("/", verifyToken, (req, res) => {
 router.get("/:id", verifyToken, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     // don't return their password
-    db.User.findById(req.params.id, {password: 0}, (err, foundUser) => {
+    db.User.findById(req.params.id, {password: 0}, (err, foundLeaseTerms) => {
       if (err) return res.send(err);
-      return res.json({foundUser});
+      return res.json({foundLeaseTerms});
     })
   } else {
     return res.status(401).json({ error: 'You are not authorized to do that.'});
@@ -76,6 +76,36 @@ router.delete("/:id", verifyToken, (req, res) => {
   } else {
     return res.status(401).json({ error: "You are not authorized to do that." });
   }
+});
+
+// CREATE sections
+// creates a new section in a lease term
+// requires the user be an admin of the property
+router.post("/:id/sections", verifyToken, (req, res) => {
+  db.LeaseTerms.find(req.decodedUser._id, (err, foundLeaseTerms) => {
+    if (err) return res.status(404).json({ error: 'Could not find your profile.'});
+    return res.json(foundLeaseTerms);
+  })
+});
+
+// UPDATE sections
+// updates a section in a lease term
+// requires the user be an admin of the property
+router.update("/:id/sections/:id", verifyToken, (req, res) => {
+  db.LeaseTerms.find(req.decodedUser._id, (err, foundLeaseTerms) => {
+    if (err) return res.status(404).json({ error: 'Could not find your profile.'});
+    return res.json(foundLeaseTerms);
+  })
+});
+
+// DELETE sections
+// deletes a section in a lease term
+// requires the user be an admin of the property
+router.delete("/:id/sections/:id", verifyToken, (req, res) => {
+  db.LeaseTerms.find(req.decodedUser._id, (err, foundLeaseTerms) => {
+    if (err) return res.status(404).json({ error: 'Could not find your profile.'});
+    return res.json(foundLeaseTerms);
+  })
 });
 
 module.exports = router;
