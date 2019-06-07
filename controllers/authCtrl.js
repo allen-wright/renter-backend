@@ -34,7 +34,7 @@ router.post('/signup', (req, res) => {
             db.User.create({
               name: req.body.name,
               email: req.body.email,
-              property: req.body.property ? req.body.property: null,
+              property: req.body.property || null,
               password: hash
             }, (err, newUser) => {
               // if successful, create JWT
