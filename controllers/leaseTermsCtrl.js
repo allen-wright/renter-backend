@@ -7,7 +7,7 @@ const verifyToken = require('../middleware/verification');
 // SHOW lease terms
 // gets current user's lease terms via the ID from their token
 router.get("/", verifyToken, (req, res) => {
-  db.LeaseTerms.find({property: req.decodedUser.property}, (err, foundLeaseTerms) => {
+  db.LeaseTerms.findOne({property: req.decodedUser.property}, (err, foundLeaseTerms) => {
     if (err) return res.status(404).json({ error: 'Could not find your lease terms.'});
     return res.json(foundLeaseTerms);
   })
