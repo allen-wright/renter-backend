@@ -107,6 +107,7 @@ let Chat = [
     tenant: '5cfadf3cbc3dd7055097a39e',
     maintenanceRequest: '5cfade2be5930e274d7e3c61',
     property: '5cfadc4bf9ef01a9c83d954f',
+    subject: 'Washing machine not working..',
     messages: [
       {
         senderId: '5cfadf3cbc3dd7055097a39e',
@@ -127,6 +128,7 @@ let Chat = [
     tenant: '5cfadf4acea1490d46409005',
     maintenanceRequest: null,
     property: '5cfadc4bf9ef01a9c83d954f',
+    subject: 'My neighbor making too much noise.',
     messages: [
       {
         senderId: '5cfadf4acea1490d46409005',
@@ -147,6 +149,7 @@ let Chat = [
     tenant: '5cfadf5baccdffe523447391',
     maintenanceRequest: null,
     property: '5cfadc4bf9ef01a9c83d954f',
+    subject: 'Noise complaints...',
     messages: [
       {
         senderId: '5cfadf2e3e13f57bc1213f17',

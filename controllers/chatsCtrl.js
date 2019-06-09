@@ -10,10 +10,15 @@ const verifyToken = require('../middleware/verification');
 // if the user is the site owner, gets all chats
 router.get("/all", verifyToken, (req, res) => {
   if (req.decodedUser.role === 1) {
-    db.Chat.find({ tenant: req.decodedUser._id }, (err, foundChats) => {
-      if (err) return res.status(404).json({ error: 'Could not find the chat.'});
-      return res.json(foundChats);
-    })
+    db.Chat.find({ tenant: req.decodedUser._id })
+      .populate({
+        path: 'messages.senderId',
+        select: 'name'
+      })
+      .exec((err, foundChats) => {
+        if (err) return res.status(404).json({ error: 'Could not find the chat.'});
+        return res.json(foundChats);
+      })
   } else if (req.decodedUser.role === 2) {
     db.Chat.find({ property: req.decodedUser.property }, (err, foundChats) => {
       if (err) return res.status(404).json({ error: 'Could not find the chat.'});

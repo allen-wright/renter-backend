@@ -22,6 +22,7 @@ const ChatSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Property'
   },
+  subject: String,
   messages: [{
     senderId: {
       type: Schema.Types.ObjectId,
