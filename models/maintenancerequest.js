@@ -15,6 +15,10 @@ const MaintenanceRequestSchema = new Schema({
     ref: 'Chat'
   },
   request: String,
+  date: {
+    type: Date,
+    default: Date.now()
+  },
   status: String,
   completionEstimate: Date,
   completionDate: Date,
