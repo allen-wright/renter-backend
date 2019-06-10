@@ -96,15 +96,25 @@ router.delete("/:id", verifyToken, (req, res) => {
 router.post('/:id/messages', verifyToken, (req, res) => {
   db.Chat.findById(req.params.id, (err, foundChat) => {
     if (err) return res.status(404).json({error: 'Could not find the chat with that ID.'});
-    if (req.decodedUser._id === foundChat.tenant || req.decodedUser.role === 2) {
+    if (req.decodedUser._id.toString() === foundChat.tenant.toString()) {
       foundChat.messages.push({
         senderId: req.decodedUser._id,
         content: req.body.content
       });
       foundChat.save((err, savedChat) => {
         if (err) res.status(500).json({error: 'There was an error saving the message. Please try again.'});
-        res.json(savedChat);
-      })
+        if (req.decodedUser.role === 1) {
+          db.Chat.find({ tenant: req.decodedUser._id })
+            .populate({
+              path: 'messages.senderId',
+              select: 'name'
+            })
+            .exec((err, foundChats) => {
+              if (err) return res.status(404).json({ error: 'Could not find the chat.'});
+              return res.json(foundChats);
+            })
+        }
+    })
     } else {
       return res.status(401).json({error: 'You are not authorized to do that.'});
     }
