@@ -73,9 +73,9 @@ let MaintenanceRequest = [
     chat: '5cfadec19bcdb34653086af5',
     request: `The washing machine is broken.`,
     status: 'In Progress',
-    completionEstimate: null,
+    completionEstimate: '2019-6-17',
     completionDate: null,
-    notes: null
+    notes: 'Maintenance needs to purchase an additional part - may take an additional few days.'
   },
   {
     _id: '5cfade6af070dd1388efa2cb',
