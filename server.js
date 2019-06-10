@@ -7,6 +7,10 @@ const cors = require('cors');
 dotenv.config();
 // setup port
 const PORT = process.env.PORT || 4000;
+// setup cors
+const corsOptions = {
+  origin: process.env.CORS_WHITELIST
+}
 
 const app = express();
 
@@ -19,7 +23,7 @@ const leaseTermsCtrl = require('./controllers/leaseTermsCtrl');
 const maintenanceRequestsCtrl = require('./controllers/maintenanceRequestsCtrl');
 
 // middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
