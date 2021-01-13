@@ -3,7 +3,6 @@ const db = require('../models');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 router.post('/signup', (req, res) => {
   const errors = [];
@@ -37,23 +36,8 @@ router.post('/signup', (req, res) => {
               property: req.body.property || null,
               password: hash
             }, (err, newUser) => {
-              // if successful, create JWT
-              const token = jwt.sign(
-                {
-                  name: newUser.name,
-                  email: newUser.email,
-                  role: newUser.role,
-                  property: newUser.property || null,
-                  _id: newUser._id
-                },
-                process.env.JWT_SECRET_KEY,
-                {
-                  expiresIn: "30 days"
-                },
-              );
                 res.status(200).json({
-                  message: 'User Created',
-                  token
+                  message: 'User Created'
                 })
             })
           }
@@ -82,25 +66,9 @@ router.post('/login', (req, res) => {
       bcrypt.compare(req.body.password, users[0].password, (err, match) => {
         if (err) { console.log(err);return res.status(500).json({err}) }
         if (match) {
-          // create JWT
-          const token = jwt.sign(
-            {
-              name: users[0].name,
-              email: users[0].email,
-              role: users[0].role,
-              property: users[0].property || null,
-              _id: users[0]._id
-            },
-            process.env.JWT_SECRET_KEY,
-            {
-              expiresIn: "30 days"
-            },
-          );
-          // send success back to user, along with a token.
           return res.status(200).json(
             {
               message: 'Auth successful',
-              token
             }
           )
         // the password provided does not match the password on file.
