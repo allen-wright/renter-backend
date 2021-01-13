@@ -1,8 +1,12 @@
 const express = require('express');
 const session = require('express-session');
+const morgan = require('morgan');
 const redis = require('redis');
 const redisStore = require('connect-redis')(session);
-const redisClient = redis.createClient();
+const redisClient = redis.createClient({
+  host: 'redis-server',
+  port: '6379'
+});
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -26,11 +30,24 @@ const authCtrl = require('./controllers/authCtrl');
 // const leaseTermsCtrl = require('./controllers/leaseTermsCtrl');
 // const maintenanceRequestsCtrl = require('./controllers/maintenanceRequestsCtrl');
 
+redisClient.on('connect', function() {
+  console.log('Connected to Redis.');
+});
+
+redisClient.on('error', function(err) {
+  console.log(`Redis error: ${err}`);
+});
 // middleware
+app.use(morgan('combined'));
 app.use(session({
   secret: process.env.REDIS_SECRET,
   // create new redis store.
-  store: new redisStore({ host: 'localhost', port: 6379, client: redisClient }),
+  store: new redisStore(
+    {
+      host: 'redis-server',
+      port: '6379',
+      client: redisClient
+    }),
   saveUninitialized: false,
   resave: false
 }));

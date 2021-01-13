@@ -75,11 +75,8 @@ router.post('/login', (req, res) => {
           }
           return res.status(200).json(
             {
-              message: 'Auth successful',
-              user: {
-                name: users[0].name,
-                email: users[0].email
-              }
+              name: users[0].name,
+              email: users[0].email
             }
           )
         // the password provided does not match the password on file.

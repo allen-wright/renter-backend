@@ -1,7 +1,16 @@
 const mongoose = require('mongoose');
-const DB_URL = process.env.MONGO_URI || 'mongodb://localhost:27017/renter';
+const DB_URL = process.env.MONGO_URI || 'mongodb://mongo-server:27017/renter';
+const RETRY_TIMEOUT = 3000;
 
-mongoose.connect(DB_URL, { useNewUrlParser: true, useFindAndModify: false })
+mongoose.connect(DB_URL,
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    autoReconnect: true,
+    keepAlive: 30000,
+    reconnectInterval: RETRY_TIMEOUT,
+    reconnectTries: 10000
+  })
   .then(() => {console.log('MongoDB connected...')})
   .catch((err) => console.log(err));
 
