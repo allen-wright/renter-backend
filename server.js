@@ -19,7 +19,7 @@ const corsOptions = {
 const app = express();
 
 // controllers
-// const authCtrl = require('./controllers/authCtrl');
+const authCtrl = require('./controllers/authCtrl');
 // const usersCtrl = require('./controllers/usersCtrl');
 // const propertiesCtrl = require('./controllers/propertiesCtrl');
 // const chatsCtrl = require('./controllers/chatsCtrl');
@@ -40,11 +40,12 @@ app.use(bodyParser.json());
 
 // web routes
 app.get('/', (req, res) => {
+  console.log(req.session);
   res.send('api page');
 })
 
 // api routes
-// app.use('/api/v1/auth', authCtrl);
+app.use('/api/v1/auth', authCtrl);
 // app.use('/api/v1/users', usersCtrl);
 // app.use('/api/v1/properties', propertiesCtrl);
 // app.use('/api/v1/chats', chatsCtrl);

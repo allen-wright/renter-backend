@@ -36,6 +36,8 @@ router.post('/signup', (req, res) => {
               property: req.body.property || null,
               password: hash
             }, (err, newUser) => {
+                req.session.key = newUser;
+                console.log(req.session.key);
                 res.status(200).json({
                   message: 'User Created'
                 })
@@ -66,9 +68,18 @@ router.post('/login', (req, res) => {
       bcrypt.compare(req.body.password, users[0].password, (err, match) => {
         if (err) { console.log(err);return res.status(500).json({err}) }
         if (match) {
+          req.session.key = users[0]._id;
+          req.session.user = {
+            name: users[0].name,
+            email: users[0].email
+          }
           return res.status(200).json(
             {
               message: 'Auth successful',
+              user: {
+                name: users[0].name,
+                email: users[0].email
+              }
             }
           )
         // the password provided does not match the password on file.
@@ -80,6 +91,16 @@ router.post('/login', (req, res) => {
     .catch( err => {
       res.status(500).json({err})
     })
+});
+
+router.post('/logout', (req, res) => {
+  if (req.session.key) {
+    req.session.destroy(() => {
+      res.json({"success" : true, "message" : "User logged out."});
+    });
+  } else {
+    res.json({"success" : false, "message" : "User already logged out."});
+  }
 });
 
 module.exports = router;

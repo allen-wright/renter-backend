@@ -216,11 +216,10 @@ let users = [
   },
   {
     "_id": "5cfadf3cbc3dd7055097a39e",
-    "name": "Clementine Bauch",
+    "name": "Test User",
     "role": 1,
     "property": "5cfadc4bf9ef01a9c83d954f",
-    "username": "Samantha",
-    "email": "Nathan@yesenia.net",
+    "email": "test@test.com",
     "address": {
       "street": "Douglas Extension",
       "suite": "Suite 847",
