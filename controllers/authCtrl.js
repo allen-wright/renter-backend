@@ -90,7 +90,7 @@ router.post('/login', (req, res) => {
     })
 });
 
-router.post('/logout', (req, res) => {
+router.delete('/logout', (req, res) => {
   if (req.session.key) {
     req.session.destroy(() => {
       res.json({"success" : true, "message" : "User logged out."});

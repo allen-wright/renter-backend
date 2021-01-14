@@ -6,6 +6,8 @@ services:
     working_dir: /var/www/renter-backend
     ports:
       - "5000:5000"
+    volumes:
+      - ./:/var/www/renter-backend
   redis-server:
     image: redis
     restart: always
