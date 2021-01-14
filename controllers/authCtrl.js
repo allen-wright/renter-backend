@@ -36,11 +36,12 @@ router.post('/signup', (req, res) => {
               property: req.body.property || null,
               password: hash
             }, (err, newUser) => {
+              if (err) return res.status(500).json({ 'error': 'Could not create user.' });
                 req.session.key = true;
                 req.session.user = {
-                  _id: users[0]._id,
-                  name: users[0].name,
-                  email: users[0].email
+                  _id: newUser._id,
+                  name: newUser.name,
+                  email: newUser.email
                 }
                 return res.status(200).json({
                   message: 'User Created'
