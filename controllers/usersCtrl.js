@@ -2,11 +2,11 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-const verifyToken = require('../middleware/verification');
+const verifySession = require('../middleware/verification');
 
 // SHOW user
 // gets current user's profile via the ID from their token
-router.get("/", verifyToken, (req, res) => {
+router.get("/", verifySession, (req, res) => {
   // don't return their password
   db.User.findById(req.decodedUser._id, {password: 0}, (err, foundUser) => {
     if (err) return res.status(404).json({ error: 'Could not find your profile.'});
@@ -15,7 +15,7 @@ router.get("/", verifyToken, (req, res) => {
 });
 
 // SHOW user
-router.get("/:id", verifyToken, (req, res) => {
+router.get("/:id", verifySession, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     // don't return their password
     db.User.findById(req.params.id, {password: 0}, (err, foundUser) => {
@@ -29,7 +29,7 @@ router.get("/:id", verifyToken, (req, res) => {
 
 // INDEX users
 // gets all users
-router.get("/all", verifyToken, (req, res) => {
+router.get("/all", verifySession, (req, res) => {
   if (req.decodedUser.role >= 2) {
     // don't return any passwords
     db.User.find({}, {password: 0}, (err, allUsers) => {
@@ -42,7 +42,7 @@ router.get("/all", verifyToken, (req, res) => {
 });
 
 // UPDATE user
-router.put("/:id", verifyToken, (req, res) => {
+router.put("/:id", verifySession, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     db.User.findByIdAndUpdate(
       req.params.id,
@@ -60,7 +60,7 @@ router.put("/:id", verifyToken, (req, res) => {
 
 // DESTROY user
 // deletes user by ID
-router.delete("/", verifyToken, (req, res) => {
+router.delete("/", verifySession, (req, res) => {
   db.User.findByIdAndDelete(req.decodedUser._id, {password: 0}, (err, deletedUser) => {
     if (err) return res.status(404).json({ error: 'Could not find your user information.'});
     return res.json(deletedUser);
@@ -68,7 +68,7 @@ router.delete("/", verifyToken, (req, res) => {
 });
 
 // DESTROY user
-router.delete("/:id", verifyToken, (req, res) => {
+router.delete("/:id", verifySession, (req, res) => {
   if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
     db.User.findByIdAndDelete(req.params.id, {password: 0}, (err, deletedUser) => {
       if (err) return res.send(err);

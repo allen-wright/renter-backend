@@ -81,12 +81,12 @@ router.post('/login', (req, res) => {
           )
         // the password provided does not match the password on file.
         } else {
-          res.status(401).json({message: "Email/Password incorrect"})
+          return res.status(401).json({message: "Email/Password incorrect"})
         }
       })
     })
     .catch( err => {
-      res.status(500).json({err})
+      return res.status(500).json({err})
     })
 });
 
