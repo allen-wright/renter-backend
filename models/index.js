@@ -6,10 +6,8 @@ mongoose.connect(DB_URL,
   {
     useNewUrlParser: true,
     useFindAndModify: false,
-    autoReconnect: true,
+    useUnifiedTopology: true,
     keepAlive: 30000,
-    reconnectInterval: RETRY_TIMEOUT,
-    reconnectTries: 10000
   })
   .then(() => {console.log('MongoDB connected...')})
   .catch((err) => console.log(err));

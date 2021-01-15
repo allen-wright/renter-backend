@@ -17,7 +17,7 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 // setup cors
 const corsOptions = {
-  origin: process.env.CORS_WHITELIST,
+  origin: true,
   credentials: true
 }
 
@@ -56,6 +56,8 @@ app.use(session({
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+app.set('trust proxy', true);
+
 // web routes
 app.get('/', function(req, res) {
   console.log(req.session);
@@ -63,8 +65,8 @@ app.get('/', function(req, res) {
 })
 
 // api routes
-app.use('/v1/auth', authCtrl);
-app.use('/v1/users', usersCtrl);
+app.use('/api/v1/auth', authCtrl);
+app.use('/api/v1/users', usersCtrl);
 // app.use('/v1/properties', propertiesCtrl);
 // app.use('/v1/chats', chatsCtrl);
 // app.use('/v1/leaseterms', leaseTermsCtrl);

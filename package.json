@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "DEBUG=express-session nodemon server.js"
+    "start": "node seed && DEBUG=express-session nodemon server.js"
   },
   "author": "",
   "license": "ISC",
