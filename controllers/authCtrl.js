@@ -10,7 +10,7 @@ router.post('/signup', (req, res) => {
   if (!req.body.name) errors.push({ message: 'Please enter your name.' });
   if (!req.body.email) errors.push({ message: 'Please enter your email.' } );
   if (!req.body.password) errors.push({ message: 'Please enter your password.' });
-  if (req.body.password !== req.body.password2) errors.push({message: 'Your passwords do not match.'});
+  if (req.body.password !== req.body.password2) errors.push({ message: 'Your passwords do not match.' });
   // if errors exist, end and return those errors
   if (errors.length > 0) return res.status(400).send(errors);
   // check to see if email is already in db
@@ -58,13 +58,14 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+  console.log('in /login');
   // find user
   db.User.find({ email: req.body.email })
     .select('+password')
     .exec()
     .then( users => {
       // if no user exists
-      if(users.length < 1) {
+      if (users.length < 1) {
         return res.status(401).json({
           message: "Email/Password incorrect"
         })
@@ -77,8 +78,10 @@ router.post('/login', (req, res) => {
           req.session.user = {
             _id: users[0]._id,
             name: users[0].name,
-            email: users[0].email
+            email: users[0].email,
+            role: users[0].role
           }
+          console.log(req.session);
           return res.status(200).json(
             {
               name: users[0].name,

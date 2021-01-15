@@ -5,20 +5,16 @@ const db = require("../models");
 const verifySession = require('../middleware/verification');
 
 // SHOW user
-// gets current user's profile via the ID from their token
+// show a logged-in user their own information
 router.get("/", verifySession, (req, res) => {
-  // don't return their password
-  db.User.findById(req.decodedUser._id, {password: 0}, (err, foundUser) => {
-    if (err) return res.status(404).json({ error: 'Could not find your profile.'});
-    return res.json(foundUser);
-  })
+  return res.json(req.session.user);
 });
 
 // SHOW user
 router.get("/:id", verifySession, (req, res) => {
-  if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
+  if (req.session.user._id === req.params.id || req.session.user.role >= 2) {
     // don't return their password
-    db.User.findById(req.params.id, {password: 0}, (err, foundUser) => {
+    db.User.findById(req.params.id, { password: 0 }, (err, foundUser) => {
       if (err) return res.send(err);
       return res.json({foundUser});
     })
@@ -30,9 +26,9 @@ router.get("/:id", verifySession, (req, res) => {
 // INDEX users
 // gets all users
 router.get("/all", verifySession, (req, res) => {
-  if (req.decodedUser.role >= 2) {
+  if (req.session.user.role >= 2) {
     // don't return any passwords
-    db.User.find({}, {password: 0}, (err, allUsers) => {
+    db.User.find({}, { password: 0 }, (err, allUsers) => {
       if (err) return res.send(err);
       return res.json(allUsers);
     });
@@ -43,7 +39,7 @@ router.get("/all", verifySession, (req, res) => {
 
 // UPDATE user
 router.put("/:id", verifySession, (req, res) => {
-  if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
+  if (req.session.user._id === req.params.id || req.session.user.role >= 2) {
     db.User.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -61,7 +57,7 @@ router.put("/:id", verifySession, (req, res) => {
 // DESTROY user
 // deletes user by ID
 router.delete("/", verifySession, (req, res) => {
-  db.User.findByIdAndDelete(req.decodedUser._id, {password: 0}, (err, deletedUser) => {
+  db.User.findByIdAndDelete(req.session.user._id, { password: 0 }, (err, deletedUser) => {
     if (err) return res.status(404).json({ error: 'Could not find your user information.'});
     return res.json(deletedUser);
   });
@@ -69,8 +65,8 @@ router.delete("/", verifySession, (req, res) => {
 
 // DESTROY user
 router.delete("/:id", verifySession, (req, res) => {
-  if (req.decodedUser._id === req.params.id || req.decodedUser.role >= 2) {
-    db.User.findByIdAndDelete(req.params.id, {password: 0}, (err, deletedUser) => {
+  if (req.session.user._id === req.params.id || req.session.user.role >= 2) {
+    db.User.findByIdAndDelete(req.params.id, { password: 0 }, (err, deletedUser) => {
       if (err) return res.send(err);
       return res.json(deletedUser);
     });

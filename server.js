@@ -17,7 +17,8 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 // setup cors
 const corsOptions = {
-  origin: process.env.CORS_WHITELIST
+  origin: process.env.CORS_WHITELIST,
+  credentials: true
 }
 
 const app = express();
@@ -39,6 +40,7 @@ redisClient.on('error', function(err) {
 });
 // middleware
 app.use(morgan('combined'));
+app.use(cors(corsOptions));
 app.use(session({
   secret: process.env.REDIS_SECRET,
   // create new redis store.
@@ -51,7 +53,6 @@ app.use(session({
   saveUninitialized: false,
   resave: false
 }));
-app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
