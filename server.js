@@ -63,12 +63,12 @@ app.get('/', function(req, res) {
 })
 
 // api routes
-app.use('/api/v1/auth', authCtrl);
-app.use('/api/v1/users', usersCtrl);
-// app.use('/api/v1/properties', propertiesCtrl);
-// app.use('/api/v1/chats', chatsCtrl);
-// app.use('/api/v1/leaseterms', leaseTermsCtrl);
-// app.use('/api/v1/maintenancerequests', maintenanceRequestsCtrl);
+app.use('/v1/auth', authCtrl);
+app.use('/v1/users', usersCtrl);
+// app.use('/v1/properties', propertiesCtrl);
+// app.use('/v1/chats', chatsCtrl);
+// app.use('/v1/leaseterms', leaseTermsCtrl);
+// app.use('/v1/maintenancerequests', maintenanceRequestsCtrl);
 
 // start server
 app.listen(PORT, function() {
