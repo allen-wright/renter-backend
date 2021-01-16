@@ -2,15 +2,15 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-const verifyToken = require('../middleware/verification');
+const verifySession = require('../middleware/verification');
 
 // INDEX chats
 // if the user is a tenant, gets all of their chats
 // if the user is an admin, get all of the chats for their property
 // if the user is the site owner, gets all chats
-router.get("/all", verifyToken, (req, res) => {
-  if (req.decodedUser.role === 1) {
-    db.Chat.find({ tenant: req.decodedUser._id })
+router.get("/all", verifySession, (req, res) => {
+  if (req.session.user.role === 1) {
+    db.Chat.find({ tenant: req.session.user._id })
       .populate({
         path: 'messages.senderId',
         select: 'name'
@@ -19,12 +19,12 @@ router.get("/all", verifyToken, (req, res) => {
         if (err) return res.status(404).json({ error: 'Could not find the chat.'});
         return res.json(foundChats);
       })
-  } else if (req.decodedUser.role === 2) {
-    db.Chat.find({ property: req.decodedUser.property }, (err, foundChats) => {
+  } else if (req.session.user.role === 2) {
+    db.Chat.find({ property: req.session.user.property }, (err, foundChats) => {
       if (err) return res.status(404).json({ error: 'Could not find the chat.'});
       return res.json(foundChats);
     })
-  } else if (req.decodedUser.role >= 3) {
+  } else if (req.session.user.role >= 3) {
     db.Chat.find({}, (err, foundChats) => {
       if (err) return res.status(404).json({ error: 'Could not find the chat.'});
       return res.json(foundChats);
@@ -36,11 +36,11 @@ router.get("/all", verifyToken, (req, res) => {
 
 // SHOW chat
 // gets a chat - requires a user be the admin of the property, or site owner
-router.get("/:id", verifyToken, (req, res) => {
+router.get("/:id", verifySession, (req, res) => {
   db.Chat.findById(req.params.id, (err, foundChat) => {
     if (err) return res.status(404).json({ error: 'Could not find the chat.'});
-    if (req.decodedUser.role >= 3
-      || req.decodedUser.role >= 2 && req.decodedUser.property === foundChat.property) {
+    if (req.session.user.role >= 3
+      || req.session.user.role >= 2 && req.session.user.property === foundChat.property) {
       return res.json(foundChat);
     } else {
       return res.status(401).json({ error: 'You are not authorized to do that.'});
@@ -49,9 +49,9 @@ router.get("/:id", verifyToken, (req, res) => {
 });
 
 // CREATE chat
-router.post('/', verifyToken, (req, res) => {
+router.post('/', verifySession, (req, res) => {
   // block users from creating chats that aren't on the same property unless they're a site owner
-  if (req.decodedUser.property === req.body.property || req.decodedUser.role >= 3) {
+  if (req.session.user.property === req.body.property || req.session.user.role >= 3) {
     db.Chat.create(req.body, (err, newChat) => {
       if (err) return res.send(err);
       return res.json(newChat);
@@ -63,8 +63,8 @@ router.post('/', verifyToken, (req, res) => {
 
 // UPDATE chat
 // requires the user be a site owner
-router.put("/:id", verifyToken, (req, res) => {
-  if (req.decodedUser.role >= 3) {
+router.put("/:id", verifySession, (req, res) => {
+  if (req.session.user.role >= 3) {
     db.Chat.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -81,8 +81,8 @@ router.put("/:id", verifyToken, (req, res) => {
 
 // DESTROY chat
 // requires the user be the site owner
-router.delete("/:id", verifyToken, (req, res) => {
-  if (req.decodedUser.role >= 3) {
+router.delete("/:id", verifySession, (req, res) => {
+  if (req.session.user.role >= 3) {
     db.Chat.findByIdAndDelete(req.params.id, (err, deletedChat) => {
       if (err) return res.send(err);
       return res.json(deletedChat);
@@ -93,18 +93,18 @@ router.delete("/:id", verifyToken, (req, res) => {
 });
 
 // CREATE message
-router.post('/:id/messages', verifyToken, (req, res) => {
+router.post('/:id/messages', verifySession, (req, res) => {
   db.Chat.findById(req.params.id, (err, foundChat) => {
     if (err) return res.status(404).json({error: 'Could not find the chat with that ID.'});
-    if (req.decodedUser._id.toString() === foundChat.tenant.toString()) {
+    if (req.session.user._id.toString() === foundChat.tenant.toString()) {
       foundChat.messages.push({
-        senderId: req.decodedUser._id,
+        senderId: req.session.user._id,
         content: req.body.content
       });
       foundChat.save((err, savedChat) => {
         if (err) res.status(500).json({error: 'There was an error saving the message. Please try again.'});
-        if (req.decodedUser.role === 1) {
-          db.Chat.find({ tenant: req.decodedUser._id })
+        if (req.session.user.role === 1) {
+          db.Chat.find({ tenant: req.session.user._id })
             .populate({
               path: 'messages.senderId',
               select: 'name'

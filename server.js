@@ -26,10 +26,10 @@ const app = express();
 // controllers
 const authCtrl = require('./controllers/authCtrl');
 const usersCtrl = require('./controllers/usersCtrl');
-// const propertiesCtrl = require('./controllers/propertiesCtrl');
-// const chatsCtrl = require('./controllers/chatsCtrl');
-// const leaseTermsCtrl = require('./controllers/leaseTermsCtrl');
-// const maintenanceRequestsCtrl = require('./controllers/maintenanceRequestsCtrl');
+const propertiesCtrl = require('./controllers/propertiesCtrl');
+const chatsCtrl = require('./controllers/chatsCtrl');
+const leaseTermsCtrl = require('./controllers/leaseTermsCtrl');
+const maintenanceRequestsCtrl = require('./controllers/maintenanceRequestsCtrl');
 
 redisClient.on('connect', function() {
   console.log('Connected to Redis.');
@@ -67,10 +67,10 @@ app.get('/', function(req, res) {
 // api routes
 app.use('/api/v1/auth', authCtrl);
 app.use('/api/v1/users', usersCtrl);
-// app.use('/v1/properties', propertiesCtrl);
-// app.use('/v1/chats', chatsCtrl);
-// app.use('/v1/leaseterms', leaseTermsCtrl);
-// app.use('/v1/maintenancerequests', maintenanceRequestsCtrl);
+app.use('/api/v1/properties', propertiesCtrl);
+app.use('/api/v1/chats', chatsCtrl);
+app.use('/api/v1/leaseterms', leaseTermsCtrl);
+app.use('/api/v1/maintenancerequests', maintenanceRequestsCtrl);
 
 // start server
 app.listen(PORT, function() {

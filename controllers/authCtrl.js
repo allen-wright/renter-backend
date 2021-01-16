@@ -79,7 +79,8 @@ router.post('/login', (req, res) => {
             _id: users[0]._id,
             name: users[0].name,
             email: users[0].email,
-            role: users[0].role
+            role: users[0].role,
+            property: users[0].property
           }
           console.log(req.session);
           return res.status(200).json(
