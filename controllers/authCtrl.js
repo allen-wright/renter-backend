@@ -58,7 +58,6 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  console.log('in /login');
   // find user
   db.User.find({ email: req.body.email })
     .select('+password')
