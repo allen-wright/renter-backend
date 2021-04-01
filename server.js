@@ -7,7 +7,6 @@ const redisClient = redis.createClient({
   host: 'redis-server',
   port: '6379'
 });
-const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
@@ -53,8 +52,8 @@ app.use(session({
   saveUninitialized: false,
   resave: false
 }));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(express.urlencoded());
+app.use(express.json());
 
 app.set('trust proxy', true);
 

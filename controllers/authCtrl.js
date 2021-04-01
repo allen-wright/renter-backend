@@ -65,8 +65,9 @@ router.post('/login', (req, res) => {
     .then( users => {
       // if no user exists
       if (users.length < 1) {
+        console.log('no user found');
         return res.status(401).json({
-          message: "Email/Password incorrect"
+          message: "no user found"
         })
       }
       // compare hashes
