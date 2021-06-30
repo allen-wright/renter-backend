@@ -41,7 +41,7 @@ redisClient.on('error', function(err) {
 app.use(morgan('combined'));
 app.use(cors(corsOptions));
 app.use(session({
-  secret: process.env.REDIS_SECRET,
+  secret: process.env.REDIS_SECRET || 'test',
   // create new redis store.
   store: new redisStore(
     {
